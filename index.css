@@ -1,0 +1,621 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+
+/* ========== RESET ========== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;   /* stops phones from resizing text automatically */
+}
+
+body {
+    margin: 0;
+    font-family: "Georgia", serif;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* ========== BASE: phones (default, below 480px) ========== */
+.enter-container {
+    background-color: white;
+    min-height: 100vh;
+    min-height: 100dvh;               /* correct height on mobile browsers with moving address bar */
+}
+
+.first-container {
+    background-color: #000080;
+}
+
+.heading-start {
+    margin: 0;
+    color: white;
+    font-family: "Georgia", serif;
+    font-size: clamp(15px, 4.5vw, 30px);   /* grows smoothly with screen width */
+    text-align: center;
+    padding: 18px 12px;
+}
+
+.second-img-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.badge-icon-size {
+    width: clamp(110px, 35vw, 220px);
+    height: clamp(110px, 35vw, 220px);
+    object-fit: contain;
+}
+
+.quotes {
+    color: #000080;
+    font-family: "Georgia", serif;
+    font-weight: bold;
+    font-size: clamp(14px, 4vw, 24px);
+    line-height: 1.5;
+}
+
+.third-container {
+    margin: 16px auto;
+    padding: 0 16px;
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+}
+
+.start-button-container {
+    text-align: center;
+    padding-top: 10px;
+}
+
+.Get-button {
+    background-color: #000080;
+    color: white;
+    font-family: "Georgia", serif;
+    font-size: 15px;
+    font-weight: bold;
+    width: 100%;
+    max-width: 240px;
+    min-height: 46px;                 /* 44px+ is a comfortable touch size */
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.Get-button:hover,
+.Get-button:focus-visible {
+    background-color: #0000b3;
+}
+
+
+/* ========== LARGE PHONES (480px and above) ========== */
+@media (min-width: 480px) {
+    .second-img-container {
+        margin-top: 40px;
+    }
+
+    .Get-button {
+        width: 160px;
+    }
+}
+
+
+/* ========== TABLETS / PHONES IN LANDSCAPE (600px and above) ========== */
+@media (min-width: 600px) {
+    .second-img-container {
+        margin-top: 50px;
+    }
+
+    .third-container {
+        margin-top: 24px;
+    }
+
+    .Get-button {
+        width: 170px;
+        font-size: 16px;
+    }
+}
+
+
+/* ========== LARGE TABLETS / SMALL LAPTOPS (900px and above) ========== */
+@media (min-width: 900px) {
+    .second-img-container {
+        margin-top: 60px;
+    }
+
+    .Get-button {
+        width: 190px;
+        min-height: 50px;
+        font-size: 17px;
+    }
+}
+
+
+/* ========== DESKTOP (1200px and above) ========== */
+@media (min-width: 1200px) {
+    .second-img-container {
+        margin-top: 70px;
+    }
+
+    .Get-button {
+        width: 210px;
+        min-height: 52px;
+        font-size: 18px;
+    }
+}
+
+
+/* ========== LARGE MONITORS / 4K (1920px and above) ========== */
+@media (min-width: 1920px) {
+    .heading-start {
+        font-size: 36px;
+        padding: 30px;
+    }
+
+    .third-container {
+        max-width: 1200px;
+    }
+
+    .Get-button {
+        width: 250px;
+        min-height: 60px;
+        font-size: 22px;
+    }
+}
+
+
+/* ========== PHONES IN LANDSCAPE (short screens) ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .second-img-container {
+        margin-top: 12px;
+    }
+
+    .badge-icon-size {
+        width: 80px;
+        height: 80px;
+    }
+
+    .third-container {
+        margin-top: 10px;
+    }
+}
+
+
+/* ========== USERS WHO PREFER LESS MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;   /* stops phones from resizing text automatically */
+}
+
+body {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    background-color: white;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+/* ========== BASE: small phones (default, below 360px) ========== */
+.main-container {
+    min-height: 100vh;
+    min-height: 100dvh;                /* correct height on mobile browsers with moving address bar */
+}
+
+.Top-container {
+    background-color: #000080;
+}
+
+.headin-1 {
+    margin: 0;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    font-size: clamp(15px, 4.5vw, 28px);   /* grows smoothly with screen width */
+    text-align: center;
+    padding: 16px 10px;
+}
+
+.icon-container {
+    text-align: center;
+    margin-top: 28px;
+}
+
+.icon-size {
+    width: clamp(48px, 12vw, 90px);
+    height: clamp(48px, 12vw, 90px);
+}
+
+.middle-container {
+    margin: 20px auto;
+    padding: 0 12px;
+    text-align: center;
+    width: 100%;
+    max-width: 1000px;
+}
+
+#searchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.input-box {
+    width: 100%;
+    max-width: 300px;
+    height: 46px;                      /* 44px+ is a comfortable touch size */
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 16px;                   /* 16px stops iPhone auto-zoom on focus */
+}
+
+.input-box:focus {
+    outline: 2px solid #000080;
+    outline-offset: 1px;
+}
+
+.custom-buttom {
+    width: 100%;
+    max-width: 300px;
+    min-height: 46px;
+    padding: 10px;
+    background-color: #000080;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    border: 1px solid white;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.custom-buttom:hover,
+.custom-buttom:focus-visible {
+    background-color: #0000b3;
+}
+
+input::placeholder {
+    font-size: 12px;
+}
+
+.result-box {
+    margin-top: 20px;
+    overflow-x: auto;                  /* table never breaks the page width */
+}
+
+.result-table {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+}
+
+.result-table th,
+.result-table td {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    text-align: left;
+    word-break: break-word;            /* long IDs or grades wrap instead of overflowing */
+}
+
+.result-table th {
+    background-color: #000080;
+    color: white;
+    width: 40%;
+}
+
+.status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: bold;
+}
+
+.status.pass { background-color: #2e7d32; }
+.status.fail { background-color: #c62828; }
+.status.hold { background-color: #ef6c00; }
+
+.error {
+    color: #c62828;
+    font-family: "Roboto", sans-serif;
+    padding: 0 8px;
+}
+
+
+/* ========== LARGE PHONES (480px and above) ========== */
+@media (min-width: 480px) {
+    .result-table {
+        max-width: 400px;
+        font-size: 15px;
+    }
+}
+
+
+/* ========== TABLETS / PHONES IN LANDSCAPE (600px and above) ========== */
+@media (min-width: 600px) {
+    .icon-container {
+        margin-top: 40px;
+    }
+
+    #searchForm {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .input-box {
+        width: 260px;
+    }
+
+    .custom-buttom {
+        width: 95px;
+    }
+
+    .result-table {
+        max-width: 460px;
+        font-size: 16px;
+    }
+
+    .result-table th,
+    .result-table td {
+        padding: 10px 16px;
+    }
+}
+
+
+/* ========== LARGE TABLETS / SMALL LAPTOPS (900px and above) ========== */
+@media (min-width: 900px) {
+    .icon-container {
+        margin-top: 55px;
+    }
+
+    .input-box {
+        width: 320px;
+        height: 48px;
+    }
+
+    .custom-buttom {
+        width: 105px;
+        min-height: 48px;
+        font-size: 16px;
+    }
+
+    .result-table {
+        max-width: 520px;
+        font-size: 17px;
+    }
+}
+
+
+/* ========== DESKTOP (1200px and above) ========== */
+@media (min-width: 1200px) {
+    .icon-container {
+        margin-top: 65px;
+    }
+
+    .input-box {
+        width: 380px;
+    }
+
+    .result-table {
+        max-width: 580px;
+        font-size: 18px;
+    }
+}
+
+
+/* ========== LARGE MONITORS / 4K (1920px and above) ========== */
+@media (min-width: 1920px) {
+    .headin-1 {
+        font-size: 32px;
+        padding: 30px;
+    }
+
+    .input-box {
+        width: 440px;
+        height: 54px;
+        font-size: 18px;
+    }
+
+    .custom-buttom {
+        width: 120px;
+        min-height: 54px;
+        font-size: 18px;
+    }
+
+    .result-table {
+        max-width: 700px;
+        font-size: 22px;
+    }
+}
+
+
+/* ========== PHONES IN LANDSCAPE (short screens) ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .icon-container {
+        margin-top: 12px;
+    }
+
+    .icon-size {
+        width: 60px;
+        height: 60px;
+    }
+
+    .middle-container {
+        margin-top: 12px;
+    }
+}
+
+
+/* ========== USERS WHO PREFER LESS MOTION ========== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+
+/* ========== PRINT ========== */
+@media print {
+    .Top-container,
+    #searchForm {
+        display: none;
+    }
+
+    .result-table {
+        max-width: 100%;
+    }
+}
+
+/* =====================================================
+   TRANSITIONS, LOADER AND ICON ROTATION
+   ===================================================== */
+
+/* Hide a section completely */
+.is-hidden {
+    display: none !important;
+}
+
+/* ---------- Section 1 fade out ---------- */
+#section1 {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+#section1.fade-out {
+    opacity: 0;
+    transform: translateY(-12px);
+}
+
+/* ---------- Section 2 fade in (slides up) ---------- */
+.page-enter {
+    animation: pageEnter 0.6s ease both;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* ---------- Full screen loader ---------- */
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #000080 0%, #0a0a5c 100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loader-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loader-box {
+    text-align: center;
+    padding: 20px;
+}
+
+.spinner {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border: 4px solid rgba(255, 255, 255, 0.25);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spinLoop 0.9s linear infinite;
+}
+
+@keyframes spinLoop {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loader-text {
+    margin: 0 0 16px;
+    color: #ffffff;
+    font-family: "Georgia", serif;
+    font-size: clamp(14px, 4vw, 18px);
+    letter-spacing: 0.5px;
+}
+
+.load-bar {
+    width: min(220px, 60vw);
+    height: 4px;
+    margin: 0 auto;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+}
+
+.load-bar-fill {
+    width: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: #ffffff;
+    animation: fillBar 1.6s ease-in-out forwards;   /* duration is set from index.js */
+}
+
+@keyframes fillBar {
+    from { width: 0; }
+    to   { width: 100%; }
+}
+
+/* ---------- Icon rotation on search ---------- */
+.icon-size {
+    display: inline-block;
+}
+
+.icon-size.rotate {
+    animation: iconSpin 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes iconSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ---------- Result fade in ---------- */
+.result-box > * {
+    animation: pageEnter 0.45s ease both;
+}
+
+/* ---------- Disabled search button while searching ---------- */
+.custom-buttom:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
