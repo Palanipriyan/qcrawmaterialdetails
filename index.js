@@ -21,7 +21,7 @@ const searchBtn = form.querySelector("button");
 const resultBox = document.getElementById("result");
 const iconImg = document.querySelector(".icon-size");
 
-let rows = [];          // Excel data is stored here
+let rows = [];          // Google Sheet data is stored here
 let isSearching = false;
 let isTransitioning = false;
 
@@ -53,25 +53,35 @@ function showError(message) {
 }
 
 /* =====================================================
-   LOAD EXCEL (starts as soon as the page opens)
+   LOAD DATA FROM GOOGLE SHEETS
+   Paste your "Publish to web" CSV link between the quotes below
    ===================================================== */
-const excelReady = fetch("metal.xlsx")
-    .then(function (res) {
-        if (!res.ok) {
-            throw new Error("metal.xlsx file not found in the project folder.");
-        }
-        return res.arrayBuffer();
-    })
-    .then(function (buffer) {
-        const workbook = XLSX.read(buffer, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];   // first sheet
-        rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-        console.log("Rows loaded:", rows.length, rows);          // check in browser console (F12)
-    })
-    .catch(function (err) {
-        // The error is shown on screen after section2 opens
-        window.excelError = "Unable to load Excel file: " + err.message;
-    });
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTz7y9Tg1pXpdWwWw8cLW3cE581jQtKfMDLcjvKx48W89-oHrAi0YmGvzLMf2xZ30zrZvGQcdYFVo9D/pub?gid=1319714774&single=true&output=csv";
+
+function loadData() {
+    return fetch(SHEET_URL, { cache: "no-store" })
+        .then(function (res) {
+            if (!res.ok) {
+                throw new Error("Google Sheet could not be loaded.");
+            }
+            return res.text();
+        })
+        .then(function (text) {
+            const workbook = XLSX.read(text, { type: "string", raw: true });   // raw: keeps IDs and weights exactly as text
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+            window.excelError = "";
+            console.log("Rows loaded:", rows.length, rows);   // check in browser console (F12)
+        })
+        .catch(function (err) {
+            // If old data is already loaded, keep using it instead of showing an error
+            if (rows.length === 0) {
+                window.excelError = "Unable to load data: " + err.message;
+            }
+        });
+}
+
+const excelReady = loadData();
 
 /* =====================================================
    GET START BUTTON: fade out -> loader -> fade in section2
@@ -133,7 +143,7 @@ function renderResult(rawId) {
     }
 
     if (rows.length === 0) {
-        showError("Excel data is not loaded. Open the page using Live Server and check that metal.xlsx is in the same folder.");
+        showError("Data is not loaded. Please check your internet connection and try again.");
         return;
     }
 
@@ -146,7 +156,7 @@ function renderResult(rawId) {
         return;
     }
 
-    const status = getVal(row, "Clearance Status");
+    const status = getVal(row, "Status");
     const statusClass = status.toLowerCase().replace(/[^a-z]/g, "");   // pass / fail / hold
 
     resultBox.innerHTML =
@@ -155,8 +165,8 @@ function renderResult(rawId) {
         "<tr><th>Section</th><td>" + escapeHtml(getVal(row, "Section")) + "</td></tr>" +
         "<tr><th>Grade</th><td>" + escapeHtml(getVal(row, "Grade")) + "</td></tr>" +
         "<tr><th>Embossing</th><td>" + escapeHtml(getVal(row, "Embossing")) + "</td></tr>" +
-        "<tr><th>Weight</th><td>" + escapeHtml(getVal(row, "Weight")) + "</td></tr>" +
-        '<tr><th>Clearance Status</th><td><span class="status ' + statusClass + '">' + escapeHtml(status) + "</span></td></tr>" +
+        "<tr><th>Weight in MT</th><td>" + escapeHtml(getVal(row, "Weight in MT")) + "</td></tr>" +
+        '<tr><th>Status</th><td><span class="status ' + statusClass + '">' + escapeHtml(status) + "</span></td></tr>" +
         "</table>";
 }
 
@@ -168,7 +178,7 @@ form.addEventListener("submit", async function (e) {
 
     resultBox.innerHTML = "";         // clear the old result
     spinIcon();                       // icon rotates
-    await sleep(SPIN_MS);             // wait for the rotation to finish
+    await Promise.all([sleep(SPIN_MS), loadData()]);   // icon rotates while the latest data loads
 
     renderResult(idInput.value);
 
