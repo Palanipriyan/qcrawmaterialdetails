@@ -241,8 +241,8 @@ img {
 }
 
 .icon-size {
-    width: clamp(48px, 12vw, 90px);
-    height: clamp(48px, 12vw, 90px);
+    width: clamp(60px, 20vw, 115px);
+    height: clamp(60px, 20vw, 115px);
 }
 
 .middle-container {
@@ -618,4 +618,55 @@ input::placeholder {
 .custom-buttom:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+
+/* =====================================================
+   LOCATION ICON AND "WORKING IN PROGRESS" STATUS
+   ===================================================== */
+
+/* Status badge: icon and text side by side */
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status.progress {                                /* yellow badge = working in progress */
+    background-color: #f0ad00;
+    color: #ffffff;
+    padding: 8px 18px;                            /* more space around the text (top-bottom, left-right) */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);   /* keeps white text readable on yellow */
+}
+
+.status-icon {
+    flex-shrink: 0;
+}
+
+/* Location value: green badge with white pin icon and text */
+.loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    background-color: #2e7d32;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.loc-icon {
+    flex-shrink: 0;
+    color: #ffffff;                               /* pin is white on the green badge */
+}
+
+
+/* ---------- Offline mode note under the result ---------- */
+.offline-note {
+    margin: 12px auto 0;
+    max-width: 340px;
+    font-family: "Roboto", sans-serif;
+    font-size: 12px;
+    color: #666666;
+    text-align: center;
 }
