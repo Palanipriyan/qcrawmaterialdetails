@@ -21,6 +21,15 @@ const searchBtn = form.querySelector("button");
 const resultBox = document.getElementById("result");
 const iconImg = document.querySelector(".icon-size");
 
+// Intro video elements
+const intro = document.getElementById("intro");
+const introVideo = document.getElementById("introVideo");
+const skipBtn = document.getElementById("skipBtn");
+const soundBtn = document.getElementById("soundBtn");
+const soundOnIcon = document.getElementById("soundOn");
+const soundOffIcon = document.getElementById("soundOff");
+const tapPlay = document.getElementById("tapPlay");
+
 let rows = [];          // Google Sheet data is stored here
 let isSearching = false;
 let isTransitioning = false;
@@ -50,6 +59,27 @@ function getVal(row, name) {
 
 function showError(message) {
     resultBox.innerHTML = '<p class="error">' + escapeHtml(message) + "</p>";
+}
+
+// Image shown when the searched ID is not in the sheet
+const NOT_FOUND_IMAGE = "id-not-found.jpg.jpeg";
+new Image().src = NOT_FOUND_IMAGE;     // loads the image in advance so it appears instantly
+
+function showNotFound() {
+    const wrap = document.createElement("div");
+    wrap.className = "not-found";
+
+    const img = document.createElement("img");
+    img.className = "not-found-img";
+    img.alt = "ID not found. Please check the ID Number and try again.";
+    img.onerror = function () {        // if the image file is missing, show text instead
+        showError("ID not found. Please check the ID Number and try again.");
+    };
+    img.src = NOT_FOUND_IMAGE;
+
+    wrap.appendChild(img);
+    resultBox.innerHTML = "";
+    resultBox.appendChild(wrap);
 }
 
 /* =====================================================
@@ -107,33 +137,99 @@ function loadData() {
             const sheet = workbook.Sheets[workbook.SheetNames[0]];
             rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
             window.excelError = "";
-            window.usingCache = "";           // fresh data from the internet
-            try {                             // keep a copy for offline use
-                localStorage.setItem("qc_rows", JSON.stringify({ time: Date.now(), rows: rows }));
-            } catch (e) { /* storage full or blocked: ignore */ }
             console.log("Rows loaded:", rows.length, rows);   // check in browser console (F12)
         })
         .catch(function (err) {
-            // No internet or sheet not reachable: use the copy saved from the last successful load
-            try {
-                const saved = JSON.parse(localStorage.getItem("qc_rows") || "null");
-                if (saved && saved.rows && saved.rows.length) {
-                    rows = saved.rows;
-                    window.excelError = "";
-                    window.usingCache = new Date(saved.time).toLocaleString();
-                    return;
-                }
-            } catch (e) { /* ignore */ }
-
+            // If old data is already loaded, keep using it instead of showing an error
             if (rows.length === 0) {
-                window.excelError = navigator.onLine
-                    ? "Unable to load data: " + err.message
-                    : "You are offline and no saved data is available. Please connect to the internet once to download the data.";
+                window.excelError = "Unable to load data: " + err.message;
             }
         });
 }
 
 const excelReady = loadData();
+
+/* =====================================================
+   INTRO VIDEO: plays when the app opens, then shows the
+   Get Start page (section1)
+   ===================================================== */
+const INTRO_END_HOLD_MS = reduceMotion ? 0 : 300;   // short pause on the last frame
+const INTRO_STUCK_MS = 15000;                       // if the video never starts, move on
+let introDone = false;
+let introWatchdog = null;
+
+async function finishIntro() {
+    if (introDone) return;
+    introDone = true;
+    clearTimeout(introWatchdog);
+
+    intro.classList.add("fade-out");
+    await sleep(FADE_OUT_MS);
+
+    try { introVideo.pause(); } catch (e) { /* ignore */ }
+    intro.classList.add("is-hidden");
+
+    section1.classList.remove("is-hidden");
+    section1.classList.add("page-enter");
+    window.scrollTo(0, 0);
+    // remove the animation class so it cannot block the fade-out used by Get Start
+    setTimeout(function () { section1.classList.remove("page-enter"); }, 700);
+}
+
+function showSoundButton(muted) {
+    soundBtn.classList.remove("is-hidden");
+    soundOffIcon.classList.toggle("is-hidden", !muted);
+    soundOnIcon.classList.toggle("is-hidden", muted);
+    soundBtn.setAttribute("aria-label", muted ? "Turn sound on" : "Turn sound off");
+}
+
+async function startIntro() {
+    if (reduceMotion) {            // user prefers less motion: go straight to Get Start
+        finishIntro();
+        return;
+    }
+
+    introWatchdog = setTimeout(function () {
+        if (introVideo.currentTime === 0 && tapPlay.classList.contains("is-hidden")) {
+            finishIntro();         // video could not load: never leave the user stuck
+        }
+    }, INTRO_STUCK_MS);
+
+    try {
+        introVideo.muted = false;          // 1st try: with sound
+        await introVideo.play();
+    } catch (e1) {
+        try {
+            introVideo.muted = true;       // 2nd try: browsers always allow muted autoplay
+            await introVideo.play();
+            showSoundButton(true);
+        } catch (e2) {
+            tapPlay.classList.remove("is-hidden");   // 3rd: ask the user to tap once
+        }
+    }
+}
+
+introVideo.addEventListener("ended", function () {
+    setTimeout(finishIntro, INTRO_END_HOLD_MS);
+});
+introVideo.addEventListener("error", finishIntro);
+skipBtn.addEventListener("click", finishIntro);
+
+soundBtn.addEventListener("click", function () {
+    introVideo.muted = !introVideo.muted;
+    showSoundButton(introVideo.muted);
+});
+
+tapPlay.addEventListener("click", function () {
+    tapPlay.classList.add("is-hidden");
+    introVideo.muted = false;
+    introVideo.play().catch(function () {
+        introVideo.muted = true;
+        introVideo.play().then(function () { showSoundButton(true); }).catch(finishIntro);
+    });
+});
+
+startIntro();
 
 /* =====================================================
    GET START BUTTON: fade out -> loader -> fade in section2
@@ -217,7 +313,7 @@ function renderResult(rawId) {
     });
 
     if (!row) {
-        showError("ID not found. Please check the ID Number and try again.");
+        showNotFound();
         return;
     }
 
@@ -248,11 +344,6 @@ function renderResult(rawId) {
         ? '<tr><th>Location</th><td><span class="loc">' + ICON_PIN + "<span>" + escapeHtml(location) + "</span></span></td></tr>"
         : "";
 
-    // Shown only when the data comes from the saved offline copy
-    const offlineNote = window.usingCache
-        ? '<p class="offline-note">Offline mode: showing data last updated on ' + escapeHtml(window.usingCache) + "</p>"
-        : "";
-
     resultBox.innerHTML =
         '<table class="result-table">' +
         "<tr><th>ID Number</th><td>" + escapeHtml(getVal(row, "ID Number")) + "</td></tr>" +
@@ -262,7 +353,7 @@ function renderResult(rawId) {
         "<tr><th>Weight in MT</th><td>" + escapeHtml(getVal(row, "Weight in MT")) + "</td></tr>" +
         locationRow +
         '<tr><th>Status</th><td><span class="status ' + statusClass + '">' + statusIcon + "<span>" + escapeHtml(statusText) + "</span></span></td></tr>" +
-        "</table>" + offlineNote;
+        "</table>";
 }
 
 form.addEventListener("submit", async function (e) {
@@ -280,14 +371,3 @@ form.addEventListener("submit", async function (e) {
     searchBtn.disabled = false;
     isSearching = false;
 });
-
-/* =====================================================
-   OFFLINE SUPPORT: service worker (sw.js) saves the app files on the device
-   ===================================================== */
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-        navigator.serviceWorker.register("sw.js").catch(function (err) {
-            console.log("Service worker not registered:", err);
-        });
-    });
-}

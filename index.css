@@ -661,12 +661,133 @@ input::placeholder {
 }
 
 
-/* ---------- Offline mode note under the result ---------- */
-.offline-note {
-    margin: 12px auto 0;
-    max-width: 340px;
-    font-family: "Roboto", sans-serif;
-    font-size: 12px;
-    color: #666666;
+/* ---------- "ID not found" image ---------- */
+.not-found {
     text-align: center;
+}
+
+.not-found-img {
+    display: block;
+    width: clamp(180px, 40vw, 200px);
+    height: auto;
+    margin: 0 auto;
+}
+
+
+/* =====================================================
+   INTRO VIDEO (plays first, then the Get Start page)
+   Navy blue + white only. The video background is pure
+   white, so it blends into the page on every screen.
+   ===================================================== */
+.intro {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    transition: opacity 0.4s ease;
+}
+
+.intro.fade-out {
+    opacity: 0;
+}
+
+/* Square video, as large as possible on any screen (phone, tablet, laptop, 4K) */
+.intro-video {
+    display: block;
+    width: min(94vw, 94vh, 900px);
+    width: min(94vw, 94dvh, 900px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background-color: #ffffff;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+@media (min-width: 1920px) {
+    .intro-video {
+        width: min(80vw, 90dvh, 1080px);
+    }
+}
+
+/* Skip button (bottom right) */
+.intro-skip {
+    position: absolute;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    min-height: 44px;
+    padding: 8px 22px;
+    background-color: #ffffff;
+    color: #000080;
+    font-family: "Georgia", serif;
+    font-size: 15px;
+    font-weight: bold;
+    border: 2px solid #000080;
+    border-radius: 22px;
+    cursor: pointer;
+}
+
+.intro-skip:hover,
+.intro-skip:focus-visible {
+    background-color: #000080;
+    color: #ffffff;
+}
+
+/* Sound on/off (bottom left), visible only when the browser started the video muted */
+.intro-sound {
+    position: absolute;
+    left: max(16px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000080;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px #000080;
+}
+
+.intro-sound:hover,
+.intro-sound:focus-visible {
+    background-color: #0000b3;
+}
+
+/* Big play button, visible only if autoplay is fully blocked */
+.intro-tap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 84px;
+    height: 84px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 0 5px;
+    background-color: #000080;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px #000080;
+    cursor: pointer;
+}
+
+.intro-tap:hover,
+.intro-tap:focus-visible {
+    background-color: #0000b3;
+}
+
+/* Get Start page slides in after the intro */
+#section1.page-enter {
+    animation: pageEnter 0.6s ease both;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .intro-skip { min-height: 38px; padding: 6px 18px; }
 }

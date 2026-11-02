@@ -11,21 +11,41 @@
     <!-- index.css is after Bootstrap so your styles win -->
     <link rel="stylesheet" href="index.css">
 
-    <!-- Install as app (PWA / APK) -->
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#000080">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
     <title>Raw Materials Clearance</title>
 </head>
 <body>
-    <div id="section1">
+    <!-- Intro video: plays first, then the Get Start page (section1) appears -->
+    <div id="intro" class="intro" role="presentation">
+        <video id="introVideo" class="intro-video"
+               src="assets/lion-intro.mp4"
+               poster="assets/lion-intro-poster.jpg"
+               playsinline webkit-playsinline preload="auto"
+               disablepictureinpicture disableremoteplayback
+               controlslist="nodownload nofullscreen noremoteplayback"
+               aria-hidden="true"></video>
+
+        <!-- Shown only if the browser blocks autoplay -->
+        <button type="button" id="tapPlay" class="intro-tap is-hidden" aria-label="Play intro">
+            <svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+
+        <button type="button" id="soundBtn" class="intro-sound is-hidden" aria-label="Turn sound on">
+            <svg id="soundOff" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            <svg id="soundOn" class="is-hidden" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
+        </button>
+
+        <button type="button" id="skipBtn" class="intro-skip">Skip</button>
+    </div>
+
+    <noscript><style>#intro{display:none !important}#section1{display:block !important}</style></noscript>
+
+    <div id="section1" class="is-hidden">
     <div class="enter-container">
         <div class="first-container">
             <h1 class="heading-start">Raw Material Clearance Status</h1>
         </div>
         <div class="second-img-container">
-            <img src="qc-1.png" alt="" class="badge-icon-size" />
+            <img src="qclion.jpg.jpeg" alt="" class="badge-icon-size" />
         </div>
         <div class="third-container">
             <p class="quotes">"Monitor Quality. Manage Progress. Maintain Excellence."</p>
@@ -43,7 +63,7 @@
             <h1 class="headin-1">Raw Material Acceptance Status</h1>
         </div>
         <div class="icon-container">
-            <img src="qc-2.png" alt="" class="icon-size" />
+            <img src="qcspin.jpg.png" alt="" class="icon-size" />
         </div>
         <div class="middle-container">
             <form id="searchForm">
